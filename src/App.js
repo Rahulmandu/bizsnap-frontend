@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 function App() {
+  const [contacts, setContacts] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://https://bizsnap-crm-production.up.railway.app/api/contacts')
+      .then(response => {
+        setContacts(response.data);
+      })
+      .catch(error => {
+        console.error("There was an error fetching the contacts!", error);
+      });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>BizSnap CRM - Contact List</h1>
+      <ul>
+        {contacts.map(contact => (
+          <li key={contact.id}>
+            {contact.firstName} {contact.lastName} - {contact.email} - {contact.phone}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
